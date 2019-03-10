@@ -2,6 +2,46 @@ package clockvapor.telegram
 
 import me.ivmg.telegram.Bot
 import me.ivmg.telegram.entities.*
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
+fun log(s: String) {
+    val timestamp = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+    println("$timestamp: $s")
+}
+
+fun log(t: Throwable) {
+    log(t.localizedMessage)
+    t.printStackTrace()
+}
+
+inline fun tryOrLog(f: () -> Unit) = try {
+    f()
+} catch (e: Exception) {
+    log(e)
+}
+
+inline fun <T> tryOrNull(reportException: Boolean = true, f: () -> T): T? = try {
+    f()
+} catch (e: Exception) {
+    if (reportException) log(e)
+    null
+}
+
+inline fun <T> tryOrDefault(default: T, reportException: Boolean = true, f: () -> T): T = try {
+    f()
+} catch (e: Exception) {
+    if (reportException) log(e)
+    default
+}
+
+inline fun <T> trySuccessful(reportException: Boolean = true, f: () -> T): Boolean = try {
+    f()
+    true
+} catch (e: Exception) {
+    if (reportException) log(e)
+    false
+}
 
 fun getMessageEntityText(message: Message, entity: MessageEntity): String =
     message.text!!.substring(entity.offset, entity.offset + entity.length)
