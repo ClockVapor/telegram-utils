@@ -5,6 +5,8 @@ import me.ivmg.telegram.entities.*
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+val whitespaceRegex = Regex("\\s+")
+
 fun log(s: String) {
     val timestamp = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
     println("$timestamp: $s")
